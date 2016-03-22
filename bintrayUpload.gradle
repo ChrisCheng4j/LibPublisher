@@ -27,7 +27,6 @@ def developerEmail = properties.getProperty("developer.email")
 
 def bintrayUser = properties.getProperty("bintray.user")
 def bintrayApikey = properties.getProperty("bintray.apikey")
-def bintrayGpgPassword = properties.getProperty("bintray.gpg.password")
 
 def javadocName = properties.getProperty("javadoc.name")
 
@@ -114,10 +113,9 @@ bintray {
         licenses = ["Apache-2.0"]
         publish = true
         version {
-            desc = libraryDescription
             gpg {
                 sign = true //Determines whether to GPG sign the files. The default is false
-                passphrase = bintrayGpgPassword
+                passphrase = properties.getProperty("bintray.gpg.password")
                 //Optional. The passphrase for GPG signing'
             }
         }
