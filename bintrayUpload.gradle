@@ -17,7 +17,7 @@ def androidProj = project.plugins.hasPlugin('com.android.application') || projec
 def projectName = properties.getProperty("project.name")
 def projectGroupId = properties.getProperty("project.groupId")
 def projectArtifactId = properties.getProperty("project.artifactId")
-def projectVersionName = 0.8.0
+def projectVersionName = '0.8.0'
 if (androidProj) {
     projectVersionName = android.defaultConfig.versionName
 } else {
