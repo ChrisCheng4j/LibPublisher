@@ -12,15 +12,17 @@ if(projectPropertiesFile.exists()){
     properties.load(projectPropertiesFile.newDataInputStream())
 }
 
+def androidProj = project.plugins.hasPlugin('com.android.application') || project.plugins.hasPlugin('com.android.library')
+
 // read properties
 def projectName = properties.getProperty("project.name")
 def projectGroupId = properties.getProperty("project.groupId")
 def projectArtifactId = properties.getProperty("project.artifactId")
 def projectVersionName
-if (project.plugins.hasPlugin('java-library'))
-    projectVersionName = VERSION_NAME
-else
+if (androidProj)
     projectVersionName = android.defaultConfig.versionName
+else
+    projectVersionName = VERSION_NAME
 def projectPackaging = properties.getProperty("project.packaging")
 def projectSiteUrl = properties.getProperty("project.siteUrl")
 def projectGitUrl = properties.getProperty("project.gitUrl")
@@ -71,25 +73,49 @@ install {
 }
 
 // This generates sources.jar
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
+if (androidProj) {
+    task androidSourcesJar(type: Jar) {
+        from android.sourceSets.main.java.srcDirs
+        classifier = 'sources'
+    }
+
+    task androidJavaDoc(type: Javadoc) {
+        source = android.sourceSets.main.java.srcDirs
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    }
+
+    task androidJavadocsJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+} else {
+    task javaSourcesJar(type: Jar, dependsOn:classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javaDocJar(type: Jar, dependsOn:javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
 }
 
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-// This generates javadoc.jar
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
 }
 
 artifacts {
-    archives javadocJar
-    archives sourcesJar
+    if (androidProj) {
+        archives androidSourcesJar
+        archives androidJavadocsJar
+    } else {
+        archives javaSourcesJar
+        archives javaDocJar
+    }
 }
 
 // javadoc configuration
