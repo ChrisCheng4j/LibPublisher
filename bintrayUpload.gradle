@@ -84,7 +84,7 @@ if (androidProj) {
         classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     }
 
-    task androidJavadocsJar(type: Jar, dependsOn: javadoc) {
+    task androidJavadocsJar(type: Jar, dependsOn: androidJavadoc) {
         classifier = 'javadoc'
         from javadoc.destinationDir
     }
