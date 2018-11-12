@@ -74,7 +74,6 @@ install {
 
 // This generates sources.jar
 if (androidProj) {
-
     task androidJavadocs(type: Javadoc) {
         source = android.sourceSets.main.java.source
         classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
@@ -90,7 +89,6 @@ if (androidProj) {
         classifier = 'sources'
     }
 } else {
-
     task javaSourcesJar(type: Jar, dependsOn:classes) {
         classifier = 'sources'
         from sourceSets.main.allSource
@@ -116,7 +114,19 @@ artifacts {
         archives androidJavadocsJar
     } else {
         archives javaSourcesJar
-        archives javaDocJar
+        archives javadocJar
+    }
+}
+
+// javadoc configuration
+javadoc {
+    options{
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        author true
+        version projectVersionName
+        links "http://docs.oracle.com/javase/7/docs/api"
+        title javadocName
     }
 }
 
