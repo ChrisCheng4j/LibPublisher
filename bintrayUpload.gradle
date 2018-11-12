@@ -4,25 +4,25 @@ apply plugin: 'com.jfrog.bintray'
 // load properties
 Properties properties = new Properties()
 File localPropertiesFile = project.file("local.properties");
-if(localPropertiesFile.exists()){
+if(localPropertiesFile.exists()) {
     properties.load(localPropertiesFile.newDataInputStream())
 }
 File projectPropertiesFile = project.file("project.properties");
-if(projectPropertiesFile.exists()){
+if(projectPropertiesFile.exists()) {
     properties.load(projectPropertiesFile.newDataInputStream())
 }
 
-def androidProj = project.plugins.hasPlugin('com.android.application') || project.plugins.hasPlugin('com.android.library')
-
 // read properties
+def androidProj = project.plugins.hasPlugin('com.android.application') || project.plugins.hasPlugin('com.android.library')
 def projectName = properties.getProperty("project.name")
 def projectGroupId = properties.getProperty("project.groupId")
 def projectArtifactId = properties.getProperty("project.artifactId")
 def projectVersionName
-if (androidProj)
+if (androidProj) {
     projectVersionName = android.defaultConfig.versionName
-else
+} else {
     projectVersionName = VERSION_NAME
+}
 def projectPackaging = properties.getProperty("project.packaging")
 def projectSiteUrl = properties.getProperty("project.siteUrl")
 def projectGitUrl = properties.getProperty("project.gitUrl")
