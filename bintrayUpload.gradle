@@ -42,9 +42,7 @@ install {
         pom {
             project {
                 name projectName
-                groupId projectGroupId
                 artifactId projectArtifactId
-                version projectVersionName
                 packaging projectPackaging
                 url projectSiteUrl
                 licenses {
