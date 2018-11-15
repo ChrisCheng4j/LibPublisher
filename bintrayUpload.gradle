@@ -71,7 +71,7 @@ install {
 // This generates sources.jar
 if (androidProj) {
     task androidJavadocs(type: Javadoc) {
-        source = android.sourceSets.main.java.source
+        source = android.sourceSets.main.java.srcDirs
         classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     }
 
@@ -81,7 +81,7 @@ if (androidProj) {
     }
 
     task androidSourcesJar(type: Jar) {
-        from android.sourceSets.main.java.source
+        from android.sourceSets.main.java.srcDirs
         classifier = 'sources'
     }
 } else {
